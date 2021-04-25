@@ -124,9 +124,21 @@ then
   AC_DEFINE([NO_THREAD], 1, [Define if you don't want to use the thread library])
 fi
 
+dnl
+dnl igloo
+dnl
+PKG_CHECK_MODULES([IGLOO], [igloo], [], [
+  AC_MSG_ERROR([${IGLOO_PKG_ERRORS}. igloo is required.])
+])
+
+SHOUT_REQUIRES="igloo"
+XIPH_VAR_APPEND([XIPH_CPPFLAGS],[$IGLOO_CFLAGS])
+XIPH_VAR_PREPEND([XIPH_LIBS],[$IGLOO_LDFLAGS $IGLOO_LIBS])
+
+
 PKG_CHECK_MODULES([OGG], [ogg], [
     HAVE_OGG="yes"
-    SHOUT_REQUIRES="ogg"
+    SHOUT_REQUIRES="$SHOUT_REQUIRES, ogg"
   ], [
     XIPH_PATH_OGG(, [AC_MSG_ERROR([required Ogg library not found])])
   ])
