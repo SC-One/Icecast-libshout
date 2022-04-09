@@ -15,7 +15,7 @@ variables:
 # Builds
 
 .TemplateAlpine:
-  image: registry.gitlab.xiph.org/xiph/icecast-docker-images/alpine-3.15:20220409220916
+  image: registry.gitlab.xiph.org/xiph/icecast-docker-images/alpine-3.15:20220409224442
   before_script:
     - set -xe
     - apk update
