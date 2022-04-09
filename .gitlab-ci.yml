@@ -20,7 +20,7 @@ variables:
     - set -xe
     - apk update
     - cat /etc/os*
-    - apk add musl-dev git make gcc automake autoconf libtool libogg-dev libvorbis-dev speex-dev openssl-dev
+    - apk add musl-dev git make gcc automake autoconf libtool libogg-dev libvorbis-dev speex-dev openssl-dev libtheora-dev
     - apk add libc6-compat
       # gzip required because busybox gzip does not understand best / zip for make dist
     - apk add gzip zip tar
