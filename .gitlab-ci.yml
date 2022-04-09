@@ -35,10 +35,10 @@ Build (x86_64):
   stage: build
   script:
     - gcc --version
-    - autoreconf -ifv
+    - ./autogen.sh
     - ./configure || { cat config.log; exit 1; }
     - make
-    - ls -la . m4/
+    - git submodule foreach --quiet 'git ls-files -o 2>&1 | xargs -n1 -iIII echo $path/III'; git ls-files -o | xargs tar cfvz 'fuck-you-gitlab-#2457.tar.gz'
   artifacts:
     untracked: true
     expire_in: 1 hour
@@ -51,6 +51,7 @@ Build Alpine (x86_64):
     - ./autogen.sh
     - ./configure || { cat config.log; exit 1; }
     - make
+    - git submodule foreach --quiet 'git ls-files -o 2>&1 | xargs -n1 -iIII echo $path/III'; git ls-files -o | xargs tar cfvz 'fuck-you-gitlab-#2457.tar.gz'
   artifacts:
     untracked: true
     expire_in: 1 hour
@@ -66,6 +67,7 @@ Build (x86):
     - ./autogen.sh
     - ./configure || { cat config.log; exit 1; }
     - make
+    - git submodule foreach --quiet 'git ls-files -o 2>&1 | xargs -n1 -iIII echo $path/III'; git ls-files -o | xargs tar cfvz 'fuck-you-gitlab-#2457.tar.gz'
   artifacts:
     untracked: true
     expire_in: 1 hour
@@ -110,6 +112,7 @@ Sanitizer:
 Test (x86_64):
   stage: test
   script:
+    - tar xfvz 'fuck-you-gitlab-#2457.tar.gz'
     - make check || { cat test-suite.log; exit 1; }
   needs:
     - 'Build (x86_64)'
@@ -122,6 +125,7 @@ Test Alpine (x86_64):
   extends: .TemplateAlpine
   stage: test
   script:
+    - tar xfvz 'fuck-you-gitlab-#2457.tar.gz'
     - make check || { cat test-suite.log; exit 1; }
   needs:
     - 'Build Alpine (x86_64)'
@@ -135,6 +139,7 @@ Test (x86):
   variables:
     CFLAGS: -m32
   script:
+    - tar xfvz 'fuck-you-gitlab-#2457.tar.gz'
     - make check || { cat test-suite.log; exit 1; }
   needs:
     - 'Build (x86)'
@@ -148,7 +153,7 @@ Test (x86):
 Distcheck:
   stage: test
   script:
-    - ls -la . m4/
+    - tar xfvz 'fuck-you-gitlab-#2457.tar.gz'
     - make distcheck
   artifacts:
     paths:
