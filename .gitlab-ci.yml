@@ -35,10 +35,9 @@ Build (x86_64):
   stage: build
   script:
     - gcc --version
-    - ./autogen.sh
+    - autoreconf -if
     - ./configure || { cat config.log; exit 1; }
     - make
-    - ls -la . m4/
   artifacts:
     untracked: true
     expire_in: 1 hour
@@ -148,9 +147,6 @@ Test (x86):
 Distcheck:
   stage: test
   script:
-    - ls -la . m4/
-    - ./autogen.sh
-    - ls -la . m4/
     - make distcheck
   artifacts:
     paths:
