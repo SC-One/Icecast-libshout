@@ -59,6 +59,7 @@ Build (x86):
   stage: build
   variables:
     CFLAGS: -m32
+    LDFLAGS: "-m32"
   script:
     - gcc --version
     - ./autogen.sh
