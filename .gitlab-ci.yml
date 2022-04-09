@@ -52,7 +52,9 @@ Build (x86_64):
     - make
 
 Build Alpine (x86_64):
-  extends: .TemplateAlpine .TemplateBuildGeneral
+  extends:
+    - .TemplateBuildGeneral
+    - .TemplateAlpine
   stage: build
   script:
     - gcc --version
