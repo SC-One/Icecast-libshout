@@ -12,7 +12,17 @@ default:
 variables:
     GIT_SUBMODULE_STRATEGY: recursive
 
-# Builds
+# Templates
+
+.TemplateBuildGeneral:
+  stage: build
+  artifacts:
+    paths:
+      - "config.log"
+      - "fuck-you-gitlab-#2457.tar.gz"
+    expire_in: 1 hour
+  after_script:
+    - ( git submodule foreach --quiet 'git ls-files -o 2>&1 | xargs -n1 -iIII echo $path/III'; git ls-files -o ) | xargs tar cfvz 'fuck-you-gitlab-#2457.tar.gz'
 
 .TemplateAlpine:
   image: registry.gitlab.xiph.org/xiph/icecast-docker-images/alpine-3.15:20220409224442
@@ -31,34 +41,27 @@ variables:
       # Create user to run tests
       #- adduser -s /bin/sh -D -H icecast
 
+# Builds
+
 Build (x86_64):
-  stage: build
+  extends: .TemplateBuildGeneral
   script:
     - gcc --version
     - ./autogen.sh
     - ./configure || { cat config.log; exit 1; }
     - make
-    - ( git submodule foreach --quiet 'git ls-files -o 2>&1 | xargs -n1 -iIII echo $path/III'; git ls-files -o ) | xargs tar cfvz 'fuck-you-gitlab-#2457.tar.gz'
-  artifacts:
-    untracked: true
-    expire_in: 1 hour
 
 Build Alpine (x86_64):
-  extends: .TemplateAlpine
+  extends: .TemplateAlpine .TemplateBuildGeneral
   stage: build
   script:
     - gcc --version
     - ./autogen.sh
     - ./configure || { cat config.log; exit 1; }
     - make
-    - ( git submodule foreach --quiet 'git ls-files -o 2>&1 | xargs -n1 -iIII echo $path/III'; git ls-files -o ) | xargs tar cfvz 'fuck-you-gitlab-#2457.tar.gz'
-  artifacts:
-    untracked: true
-    expire_in: 1 hour
-
 
 Build (x86):
-  stage: build
+  extends: .TemplateBuildGeneral
   variables:
     CFLAGS: -m32
     LDFLAGS: "-m32"
@@ -67,13 +70,9 @@ Build (x86):
     - ./autogen.sh
     - ./configure || { cat config.log; exit 1; }
     - make
-    - ( git submodule foreach --quiet 'git ls-files -o 2>&1 | xargs -n1 -iIII echo $path/III'; git ls-files -o ) | xargs tar cfvz 'fuck-you-gitlab-#2457.tar.gz'
-  artifacts:
-    untracked: true
-    expire_in: 1 hour
 
 Build (clang, x86_64):
-  stage: build
+  extends: .TemplateBuildGeneral  
   variables:
     CC: clang
   script:
@@ -81,15 +80,11 @@ Build (clang, x86_64):
     - ./autogen.sh
     - ./configure || { cat config.log; exit 1; }
     - make
-    - ( git submodule foreach --quiet 'git ls-files -o 2>&1 | xargs -n1 -iIII echo $path/III'; git ls-files -o ) | xargs tar cfvz 'fuck-you-gitlab-#2457.tar.gz'
-  artifacts:
-    paths:
-      - "config.log"
-    expire_in: 1 hour
 
 # Sanitizer builds
 
 Sanitizer:
+  extends: .TemplateBuildGeneral
   stage: sanitizer
   parallel:
     matrix:
@@ -104,9 +99,6 @@ Sanitizer:
     - make check || { find ./tests -name '*.log' -print -exec cat "{}" \;; cat test-suite.log; exit 1; }
   # this statement needs to be there to disable copying of dependecies from other stage jobs - otherwhise you get funny errors - https://stackoverflow.com/a/47679028
   dependencies: []
-  artifacts:
-    untracked: true
-    expire_in: 1 hour
 
 # Build and run tests
 
