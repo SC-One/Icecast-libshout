@@ -11,6 +11,7 @@ default:
 
 variables:
     GIT_SUBMODULE_STRATEGY: recursive
+    NAME_OF_UNTRACKED_ARCHIVE: fuck-you-gitlab-#2457.tar.gz
 
 # Templates
 
@@ -22,7 +23,7 @@ variables:
       - "fuck-you-gitlab-#2457.tar.gz"
     expire_in: 1 hour
   after_script:
-    - ( git submodule foreach --quiet 'git ls-files -o 2>&1 | xargs -n1 -iIII echo $path/III'; git ls-files -o ) | xargs tar cfvz 'fuck-you-gitlab-#2457.tar.gz'
+    - ( git submodule foreach --quiet 'git ls-files -o 2>&1 | xargs -n1 -iIII echo $path/III'; git ls-files -o ) | xargs tar cfvz $NAME_OF_UNTRACKED_ARCHIVE
 
 .TemplateAlpine:
   image: registry.gitlab.xiph.org/xiph/icecast-docker-images/alpine-3.15:20220409224442
@@ -107,7 +108,7 @@ Sanitizer:
 Test (x86_64):
   stage: test
   script:
-    - tar xfvz 'fuck-you-gitlab-#2457.tar.gz'
+    - tar xfvz $NAME_OF_UNTRACKED_ARCHIVE
     - make check || { cat test-suite.log; exit 1; }
   needs:
     - 'Build (x86_64)'
@@ -120,7 +121,7 @@ Test Alpine (x86_64):
   extends: .TemplateAlpine
   stage: test
   script:
-    - tar xfvz 'fuck-you-gitlab-#2457.tar.gz'
+    - tar xfvz $NAME_OF_UNTRACKED_ARCHIVE
     - make check || { cat test-suite.log; exit 1; }
   needs:
     - 'Build Alpine (x86_64)'
@@ -135,7 +136,7 @@ Test (x86):
     CFLAGS: -m32
     LDFLAGS: -m32
   script:
-    - tar xfvz 'fuck-you-gitlab-#2457.tar.gz'
+    - tar xfvz $NAME_OF_UNTRACKED_ARCHIVE
     - make check || { cat test-suite.log; exit 1; }
   needs:
     - 'Build (x86)'
@@ -149,7 +150,7 @@ Test (clang, x86_64):
   variables:
     CFLAGS: -m32
   script:
-    - tar xfvz 'fuck-you-gitlab-#2457.tar.gz'
+    - tar xfvz $NAME_OF_UNTRACKED_ARCHIVE
     - make check || { cat test-suite.log; exit 1; }
   needs:
     - 'Build (clang, x86_64)'
@@ -163,7 +164,7 @@ Test (clang, x86_64):
 Distcheck:
   stage: test
   script:
-    - tar xfvz 'fuck-you-gitlab-#2457.tar.gz'
+    - tar xfvz $NAME_OF_UNTRACKED_ARCHIVE
     - make distcheck
   artifacts:
     paths:
