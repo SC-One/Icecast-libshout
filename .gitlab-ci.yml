@@ -38,7 +38,7 @@ Build (x86_64):
     - ./autogen.sh
     - ./configure || { cat config.log; exit 1; }
     - make
-    - git submodule foreach --quiet 'git ls-files -o 2>&1 | xargs -n1 -iIII echo $path/III'; git ls-files -o | xargs tar cfvz 'fuck-you-gitlab-#2457.tar.gz'
+    - ( git submodule foreach --quiet 'git ls-files -o 2>&1 | xargs -n1 -iIII echo $path/III'; git ls-files -o ) | xargs tar cfvz 'fuck-you-gitlab-#2457.tar.gz'
   artifacts:
     untracked: true
     expire_in: 1 hour
@@ -51,7 +51,7 @@ Build Alpine (x86_64):
     - ./autogen.sh
     - ./configure || { cat config.log; exit 1; }
     - make
-    - git submodule foreach --quiet 'git ls-files -o 2>&1 | xargs -n1 -iIII echo $path/III'; git ls-files -o | xargs tar cfvz 'fuck-you-gitlab-#2457.tar.gz'
+    - ( git submodule foreach --quiet 'git ls-files -o 2>&1 | xargs -n1 -iIII echo $path/III'; git ls-files -o ) | xargs tar cfvz 'fuck-you-gitlab-#2457.tar.gz'
   artifacts:
     untracked: true
     expire_in: 1 hour
@@ -67,7 +67,7 @@ Build (x86):
     - ./autogen.sh
     - ./configure || { cat config.log; exit 1; }
     - make
-    - git submodule foreach --quiet 'git ls-files -o 2>&1 | xargs -n1 -iIII echo $path/III'; git ls-files -o | xargs tar cfvz 'fuck-you-gitlab-#2457.tar.gz'
+    - ( git submodule foreach --quiet 'git ls-files -o 2>&1 | xargs -n1 -iIII echo $path/III'; git ls-files -o ) | xargs tar cfvz 'fuck-you-gitlab-#2457.tar.gz'
   artifacts:
     untracked: true
     expire_in: 1 hour
@@ -81,6 +81,7 @@ Build (clang, x86_64):
     - ./autogen.sh
     - ./configure || { cat config.log; exit 1; }
     - make
+    - ( git submodule foreach --quiet 'git ls-files -o 2>&1 | xargs -n1 -iIII echo $path/III'; git ls-files -o ) | xargs tar cfvz 'fuck-you-gitlab-#2457.tar.gz'
   artifacts:
     paths:
       - "config.log"
@@ -138,6 +139,7 @@ Test (x86):
   stage: test
   variables:
     CFLAGS: -m32
+    LDFLAGS: -m32
   script:
     - tar xfvz 'fuck-you-gitlab-#2457.tar.gz'
     - make check || { cat test-suite.log; exit 1; }
@@ -147,6 +149,20 @@ Test (x86):
     paths:
       - "test-suite.log"
     expire_in: 1 hour
+
+Test (clang, x86_64):
+  stage: test
+  variables:
+    CFLAGS: -m32
+  script:
+    - tar xfvz 'fuck-you-gitlab-#2457.tar.gz'
+    - make check || { cat test-suite.log; exit 1; }
+  needs:
+    - 'Build (clang, x86_64)'
+  artifacts:
+    paths:
+      - "test-suite.log"
+    expire_in: 1 hour    
 
 # Distcheck / Source tarballs
 
