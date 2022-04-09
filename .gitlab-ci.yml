@@ -38,6 +38,7 @@ Build (x86_64):
     - ./autogen.sh
     - ./configure || { cat config.log; exit 1; }
     - make
+    - ls -la . m4/
   artifacts:
     untracked: true
     expire_in: 1 hour
