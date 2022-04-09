@@ -147,6 +147,7 @@ Test (x86):
 Distcheck:
   stage: test
   script:
+    - ls -la . m4/
     - make distcheck
   artifacts:
     paths:
