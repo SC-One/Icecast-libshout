@@ -5,7 +5,7 @@ stages:
   - packaging
 
 default:
-  image: registry.gitlab.xiph.org/xiph/icecast-docker-images/debian-bullseye:20220409165620
+  image: registry.gitlab.xiph.org/xiph/icecast-docker-images/debian-bullseye:20220409183409
   tags:
     - docker
 
