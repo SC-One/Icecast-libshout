@@ -35,7 +35,9 @@ Build (x86_64):
   stage: build
   script:
     - gcc --version
-    - autoreconf -if
+    # delete old m4 links so automake creates copies
+    - find m4/ -type l -print -delete
+    - autoreconf -ifv
     - ./configure || { cat config.log; exit 1; }
     - make
   artifacts:
