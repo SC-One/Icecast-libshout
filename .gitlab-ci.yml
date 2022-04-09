@@ -8,7 +8,8 @@ default:
   image: registry.gitlab.xiph.org/xiph/icecast-docker-images/debian-bullseye:20220321214518
   tags:
     - docker
-  variables:
+
+variables:
     GIT_SUBMODULE_STRATEGY: recursive
 
 # Builds
