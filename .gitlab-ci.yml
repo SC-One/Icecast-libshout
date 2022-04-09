@@ -187,7 +187,8 @@ Package Alpine (x86_64):
     - cd _install_base/
     - tar -cvzf ../$PACKAGE_PREFIX-$CI_COMMIT_REF_NAME.tar.gz *
     - cd ..
-    - 'curl --header "JOB-TOKEN: $CI_JOB_TOKEN" --upload-file $PACKAGE_PREFIX-$CI_COMMIT_REF_NAME.tar.gz "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/$PACKAGE_PREFIX/$PACKAGE_VERSION-$CI_COMMIT_REF_NAME/$PACKAGE_PREFIX-$CI_COMMIT_REF_NAME.tar.gz"'
+    # needs curl 7.76 - alpine 3.15 has 7.80
+    - 'curl --fail-with-body --header "JOB-TOKEN: $CI_JOB_TOKEN" --upload-file $PACKAGE_PREFIX-$CI_COMMIT_REF_NAME.tar.gz "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/$PACKAGE_PREFIX/$PACKAGE_VERSION-$CI_COMMIT_REF_NAME/$PACKAGE_PREFIX-$CI_COMMIT_REF_NAME.tar.gz"'
   when: manual
   needs:
     # we need the build job artifacts
