@@ -181,6 +181,7 @@ Package Alpine (x86_64):
     PACKAGE_PREFIX: "alpine-libshout-bins"
     PACKAGE_VERSION: "0.91"
   script:
+    - tar xfvz $NAME_OF_UNTRACKED_ARCHIVE
     - mkdir _install_base
     - make install DESTDIR=`pwd`/_install_base/
     - cd _install_base/
