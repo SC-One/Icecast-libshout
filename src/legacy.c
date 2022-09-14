@@ -28,6 +28,8 @@
 #include "shout_private.h"
 #include "util.h"
 
+#include <stdlib.h> /* for free() */
+
 int shout_set_format(shout_t *self, unsigned int format)
 {
     if (!self)
