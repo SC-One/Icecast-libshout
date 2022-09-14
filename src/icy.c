@@ -24,6 +24,8 @@
 #endif
 
 #include <stdbool.h>
+#include <stdlib.h> /* for free() and malloc() */
+#include <stdio.h> /* for snprintf() */
 #include <string.h>
 
 #include <shout/shout.h>
