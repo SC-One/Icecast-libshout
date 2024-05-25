@@ -4,3 +4,6 @@
 [submodule "src/common"]
 	path = src/common
 	url = ../icecast-common.git
+[submodule "Thirdparties/VorbisOgg"]
+	path = Thirdparties/VorbisOgg
+	url = https://github.com/SC-One/vorbis.git
