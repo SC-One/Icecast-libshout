@@ -12,9 +12,14 @@ set(CMAKE_CXX_STANDARD 98)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
+if(WIN32)
+  find_library(WSOCK32_LIBRARY wsock32)
+  find_library(WS2_32_LIBRARY ws2_32)
+endif()
+
 option(SHOUT_WITH_SPEEX "WITH_SPEEX" OFF)
 option(SHOUT_WITH_OPENSSL "WITH_OPENSSL" OFF)
-option(SHOUT_WITH_THEORA "WITH_THEORA" OFF)
+option(SHOUT_WITH_THEORA "WITH_THEORA" ON)
 option(SHOUT_WITH_VorbisOgg "Compile with Vorbis and Ogg" ON)
 option(SHOUT_WITHOUT_PTHREAD "WITHOUT_PTHREAD" OFF)
 if(SHOUT_WITH_VorbisOgg)
@@ -24,6 +29,14 @@ if(SHOUT_WITH_VorbisOgg)
     vorbisenc
     vorbisfile
     Ogg::ogg
+  )
+endif()
+
+if(SHOUT_WITH_THEORA)
+  add_subdirectory(${PROJECT_SOURCE_DIR}/Thirdparties/theora ${PROJECT_BINARY_DIR}/Theora) # it add ogg and vorbis.
+  set(theora_inc_dir ${PROJECT_SOURCE_DIR}/Thirdparties/theora/include)
+  set(Theora_Libraries
+    theoradec
   )
 endif()
 
@@ -258,6 +271,13 @@ add_library(icecast-libshout ALIAS ${PROJECT_NAME})
 if(SHOUT_WITH_VorbisOgg)
   target_link_libraries(${PROJECT_NAME} PUBLIC ${VorbisOgg_Libraries})
 endif()
+
+if(SHOUT_WITH_THEORA)
+  target_include_directories(${PROJECT_NAME} PUBLIC ${theora_inc_dir})
+  target_link_libraries(${PROJECT_NAME} PUBLIC ${Theora_Libraries})
+endif()
+
+
 target_compile_definitions(${PROJECT_NAME} PRIVATE
   VERSION="${LIBSHOUT_MAJOR}.${LIBSHOUT_MINOR}.${LIBSHOUT_MICRO}"
   LIBSHOUT_MAJOR=${LIBSHOUT_MAJOR}
@@ -265,7 +285,6 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE
   LIBSHOUT_MICRO=${LIBSHOUT_MICRO}
   HAVE_GETTIMEOFDAY=1
   TIME_WITH_SYS_TIME
-
 )
 if(WIN32)
   target_compile_definitions(${PROJECT_NAME} PRIVATE strcasecmp=_stricmp)
@@ -286,9 +305,6 @@ if(SHOUT_WITH_SPEEX)
   target_link_libraries(${PROJECT_NAME} PUBLIC speex)
 endif()
 
-if(SHOUT_WITH_THEORA)
-  target_link_libraries(${PROJECT_NAME} PUBLIC theora)
-endif()
 
 if(SHOUT_WITH_OPENSSL)
   target_link_libraries(${PROJECT_NAME} PUBLIC ssl)

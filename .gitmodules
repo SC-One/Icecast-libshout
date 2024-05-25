@@ -7,3 +7,6 @@
 [submodule "Thirdparties/VorbisOgg"]
 	path = Thirdparties/VorbisOgg
 	url = https://github.com/SC-One/vorbis.git
+[submodule "Thirdparties/theora"]
+	path = Thirdparties/theora
+	url = https://github.com/SC-One/theora.git
